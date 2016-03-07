@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.tianyuan.vehiclelistview.DetailActivity"
+    tools:showIn="@layout/activity_detail">
+    <TextView
+        android:id="@+id/nameText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="2011 Honda Civic"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/priceText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameText"
+        android:gravity="center"
+        android:text="$28,000"
+        android:textSize="20sp" />
+
+
+    <ImageView
+        android:id="@+id/imageDetailView"
+        android:layout_width="fill_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/priceText"
+        android:layout_marginTop="10dp"/>
+
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/imageDetailView">
+
+        <TextView
+            android:id="@+id/descriptionText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sit amet auctor neque. Quisque sed dui nec lacus auctor consectetur. Nulla imperdiet enim ac dolor venenatis, vitae vulputate neque tempor. Interdum et malesuada fames ac ante ipsum primis in faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Proin vitae neque vitae urna congue iaculis ut vitae erat. Etiam neque augue, dictum ac suscipit ullamcorper, scelerisque id mi. Phasellus in ligula dignissim, consectetur lectus in, faucibus risus. Ut aliquet arcu id urna luctus viverra. In elementum nisl a mauris aliquet porta. Pellentesque faucibus nibh id euismod accumsan. Proin id sodales mi, sit amet commodo eros. Nunc ac blandit nisl. Vivamus rhoncus nunc ac sem tempus venenatis. Nulla aliquet sed orci nec gravida. Duis maximus, lectus id scelerisque malesuada, tortor turpis cursus nibh, quis molestie diam nulla et quam."
+            android:textSize="16sp" />
+
+    </ScrollView>
+
+
+</RelativeLayout>
