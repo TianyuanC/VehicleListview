@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     List<Vehicle> vehicleList = new ArrayList<>();
 
     public static final String IMAGE_BASE = "http://azr.cdnmedia.autotrader.ca/5";
-    private static final String SEARCH_QUERY = "https://search.beta.autotrader.ca/api/ad/?v=2&t=20&d=1&hcp=1&vp=1&haspr=true&srt=2";
+    private static final String SEARCH_QUERY = "https://search.beta.autotrader.ca/api/ad/?v=2&t=25&d=1&hcp=1&vp=1&haspr=true&srt=2";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(view.getContext(), "Network is unavailable", Toast.LENGTH_SHORT).show();
                 }
             }
-        }   );
+        });
 
         pb = (ProgressBar) findViewById(R.id.progressBar);
         pb.setVisibility(View.INVISIBLE);

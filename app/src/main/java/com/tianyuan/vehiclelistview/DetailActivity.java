@@ -7,6 +7,9 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -49,6 +52,25 @@ public class DetailActivity extends AppCompatActivity {
             Toast.makeText(findViewById(android.R.id.content).getContext(), "Network is unavailable", Toast.LENGTH_SHORT).show();
         }
 
+        final CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id
+                .coordinatorLayout);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fabEmail);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isOnline()) {
+                    Snackbar.make(view, "Interested in this car? Notify dealer now!", Snackbar.LENGTH_LONG)
+                            .setAction("Send", new View.OnClickListener(){
+                                @Override
+                                public void onClick(View v) {
+                                    Toast.makeText(v.getContext(), "Email sent", Toast.LENGTH_SHORT).show();
+                                }
+                            }).show();
+                } else {
+                    Toast.makeText(view.getContext(), "Network is unavailable", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
     protected boolean isOnline(){
