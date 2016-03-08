@@ -1,5 +1,6 @@
 package com.tianyuan.vehiclelistview;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -35,13 +36,34 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String IMAGE_BASE = "http://azr.cdnmedia.autotrader.ca/5";
     private static final String SEARCH_QUERY = "https://search.beta.autotrader.ca/api/ad/?v=2&t=25&d=1&hcp=1&vp=1&haspr=true&srt=2";
-
+    VehicleListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        pb = (ProgressBar) findViewById(R.id.progressBar);
+        pb.setVisibility(View.INVISIBLE);
+        tasks = new ArrayList<>();
+
+        ListView lv = (ListView) findViewById(R.id.listView);
+        adapter = new VehicleListAdapter(this, R.layout.list_item, vehicleList);
+        lv.setAdapter(adapter);
+
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                Vehicle vehicle = vehicleList.get(position);
+                intent.putExtra(VEHICLE_NAME, vehicle.getDetails().getStructures().toString());
+                intent.putExtra(VEHICLE_PRICE, vehicle.getDetails().getPriceFormat());
+                intent.putExtra(VEHICLE_IMAGE, vehicle.getDetails().getImageUrl());
+                intent.putExtra(VEHICLE_DESC, vehicle.getDetails().getDescription());
+                startActivity(intent);
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -55,9 +77,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        pb = (ProgressBar) findViewById(R.id.progressBar);
-        pb.setVisibility(View.INVISIBLE);
-        tasks = new ArrayList<>();
+
 
     }
     private void requestData() {
@@ -86,24 +106,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    protected void updateDisplay(){
-        ListView lv = (ListView) findViewById(R.id.listView);
-        VehicleListAdapter adapter = new VehicleListAdapter(this, R.layout.list_item, vehicleList);
-        lv.setAdapter(adapter);
-
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                Vehicle vehicle = vehicleList.get(position);
-                intent.putExtra(VEHICLE_NAME, vehicle.getDetails().getStructures().toString());
-                intent.putExtra(VEHICLE_PRICE, vehicle.getDetails().getPriceFormat());
-                intent.putExtra(VEHICLE_IMAGE, vehicle.getDetails().getImageUrl());
-                intent.putExtra(VEHICLE_DESC, vehicle.getDetails().getDescription());
-                startActivity(intent);
-            }
-        });
-    }
 
     protected boolean isOnline(){
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -124,15 +126,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected List<Vehicle> doInBackground(String... params) {
             String data = HttpManager.getData(SEARCH_QUERY);
-            vehicleList = VehicleJSONParser.parseFeed(data);
-
+            vehicleList.addAll(VehicleJSONParser.parseFeed(data));
 
             return vehicleList;
         }
 
         @Override
         protected void onPostExecute(List<Vehicle> vehicles) {
-            updateDisplay();
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                }
+            });
             tasks.remove(this);
             if(tasks.size()==0){
                 pb.setVisibility(View.INVISIBLE);
