@@ -1,6 +1,5 @@
 package com.tianyuan.vehiclelistview;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -15,10 +14,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
+import com.squareup.picasso.Picasso;
 import com.tianyuan.vehiclelistview.model.Vehicle;
 import com.tianyuan.vehiclelistview.parser.VehicleJSONParser;
 import java.util.ArrayList;
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     List<Vehicle> vehicleList = new ArrayList<>();
 
     public static final String IMAGE_BASE = "http://azr.cdnmedia.autotrader.ca/5";
-    private static final String SEARCH_QUERY = "https://search.beta.autotrader.ca/api/ad/?v=2&t=25&d=1&hcp=1&vp=1&haspr=true&srt=2";
+    private static final String SEARCH_QUERY = "https://search.beta.autotrader.ca/api/ad/?v=2&t=20&p=50&d=1&hcp=1&vp=1&haspr=true&srt=2";
     VehicleListAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +63,14 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(VEHICLE_IMAGE, vehicle.getDetails().getImageUrl());
                 intent.putExtra(VEHICLE_DESC, vehicle.getDetails().getDescription());
                 startActivity(intent);
+            }
+        });
+
+        lv.setRecyclerListener(new AbsListView.RecyclerListener() {
+            @Override
+            public void onMovedToScrapHeap(View view) {
+                ImageView imageView = (ImageView) view.findViewById(R.id.imageView);
+                Picasso.with(view.getContext()).cancelRequest(imageView);
             }
         });
 
