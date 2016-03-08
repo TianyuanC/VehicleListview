@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -65,6 +66,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        lv.setOnScrollListener(new AbsListView.OnScrollListener() {
+            private int currentVisibleItemCount;
+            private int currentFirstVisibleItem;
+            private int currentScrollState;
+            private int limit;
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                this.currentScrollState = scrollState;
+                this.isScrollCompleted();
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                this.currentFirstVisibleItem = firstVisibleItem;
+                this.currentVisibleItemCount = visibleItemCount;
+                this.limit = totalItemCount;
+            }
+
+            private void isScrollCompleted() {
+                int position = currentFirstVisibleItem+currentVisibleItemCount;
+                if (this.currentVisibleItemCount > 0 && position >= limit && this.currentScrollState == SCROLL_STATE_IDLE) {
+                    requestData();
+                }
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,9 +103,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-
     }
     private void requestData() {
         FetchTask task = new FetchTask();
@@ -94,12 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
